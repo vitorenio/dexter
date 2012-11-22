@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            name="Editor de Perspectivas"
+            extensions="perspective"
+            icon="icons/sample.gif"
+            contributorClass="br.furb.extbuilder.ui.editor.PerspectiveEditorContributor"
+            class="br.furb.extbuilder.ui.editor.PerspectiveEditor"
+            id="br.furb.extbuilder.ui.editor.PerspectiveEditor">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            name="ExtBuilder"
+            id="br.furb.extbuilder.Wizard1">
+      </category>
+      <wizard
+            name="New Ext File"
+            icon="icons/sample.gif"
+            category="br.furb.extbuilder.Wizard1"
+            class="br.furb.extbuilder.ui.wizard.NewExtFileWizard"
+            id="br.furb.extbuilder.ui.wizard.NewExtFileWizard">
+      </wizard>
+   </extension>
+   
+      
+   <extension
+        point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
+     <propertyContributor
+           contributorId="br.furb.extbuilder.PropertyContributor">
+        <propertyCategory
+              category="ProtoPropertyContributor"></propertyCategory>
+     </propertyContributor>
+  </extension>
+  <extension
+        point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
+     <propertyTabs
+           contributorId="br.furb.extbuilder.PropertyContributor">
+        <propertyTab
+              category="ProtoPropertyContributor"
+              id="br.furb.extbuilder.properties"
+              label="Propriedades">
+        </propertyTab>
+     </propertyTabs>
+  </extension>
+  
+  <extension
+	point="org.eclipse.ui.commands">
+      <command            
+            id="br.furb.AddComponentCommand"
+            description="%contributions.view.count.desc"
+            name="AddComponent1">
+      </command>
+  </extension>
+  
+<extension
+ point="org.eclipse.ui.handlers">
+ <handler
+  commandId="br.furb.AddComponentCommand"
+  class="br.furb.extbuilder.ui.outline.DefaultHandler">
+               <enabledWhen>
+            <count
+                  value="1">
+            </count>
+         </enabledWhen>
+ </handler>
+</extension>
+  
+     <extension
+         id="add.item"
+         point="org.eclipse.ui.menus">
+      <menuContribution
+         locationURI="popup:org.eclipse.ui.examples.readmetool.outline">
+         <command
+               commandId="br.furb.AddComponentCommand"
+               icon="icons/anything.gif"
+               id="br.furb.AddCompItem1"
+               label="Add Component"
+               mnemonic="S">
+
+         </command>
+         
+      </menuContribution>
+   </extension>
+</plugin>
