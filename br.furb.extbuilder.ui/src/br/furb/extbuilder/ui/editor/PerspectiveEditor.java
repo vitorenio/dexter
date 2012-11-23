@@ -25,6 +25,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.ExpandBar;
+import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.widgets.FontDialog;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -76,6 +78,8 @@ public class PerspectiveEditor extends MultiPageEditorPart implements IResourceC
 			editor = new TextEditor();
 			int index = addPage(editor, getEditorInput());
 			setPageText(index, editor.getTitle());
+			
+			createPaletteControls();
 		} catch (PartInitException e) {
 			ErrorDialog.openError(
 				getSite().getShell(),
@@ -83,6 +87,49 @@ public class PerspectiveEditor extends MultiPageEditorPart implements IResourceC
 				null,
 				e.getStatus());
 		}
+	}
+	private void createPaletteControls() {
+		// 		Composite container = new Composite(parent, SWT.NONE);
+		
+		Composite composite_1 = new Composite(getContainer().getParent(), SWT.NONE);
+		composite_1.setBounds(0, 0, 200, 468);
+		
+		ExpandBar expandBar = new ExpandBar(composite_1, SWT.NONE);
+		expandBar.setSize(158, 224);
+		expandBar.setSpacing(0);
+		
+		ExpandItem xpndtmNewExpanditem = new ExpandItem(expandBar, SWT.NONE);
+		xpndtmNewExpanditem.setExpanded(true);
+		xpndtmNewExpanditem.setText("Controls");
+		
+		Composite composite = new Composite(expandBar, SWT.NONE);
+		xpndtmNewExpanditem.setControl(composite);
+		xpndtmNewExpanditem.setHeight(200);
+		composite.setLayout(null);
+		
+		Button btnButton = new Button(composite, SWT.NONE);
+		btnButton.setBounds(5, 5, 65, 25);
+		btnButton.setText("Button");
+		
+		Button btnLabel = new Button(composite, SWT.NONE);
+		btnLabel.setBounds(5, 34, 65, 25);
+		btnLabel.setText("Label");
+		
+		Button btnNewButton = new Button(composite, SWT.NONE);
+		btnNewButton.setBounds(5, 65, 65, 25);
+		btnNewButton.setText("Text Area");
+		
+		Button btnForm = new Button(composite, SWT.NONE);
+		btnForm.setBounds(76, 65, 65, 25);
+		btnForm.setText("Form");
+		
+		Button btnCheckbox = new Button(composite, SWT.NONE);
+		btnCheckbox.setBounds(76, 34, 65, 25);
+		btnCheckbox.setText("Checkbox");
+		
+		Button btnRadio = new Button(composite, SWT.NONE);
+		btnRadio.setBounds(76, 5, 65, 25);
+		btnRadio.setText("Radio");
 	}
 	/**
 	 * Creates page 1 of the multi-page editor,

@@ -13,7 +13,6 @@ public abstract class Component<T extends Conversible> {
 	 */
     protected T componentConverter;
 	
-    private String id = "";
     private String name = "";
 
     public Component(){
@@ -26,14 +25,6 @@ public abstract class Component<T extends Conversible> {
     
     public void setName(String name) {
         this.name = name;
-    }
-    
-    public String getId() {
-        return id;
-    }
-    
-    public void setId(String id) {
-        this.id = id;
     }
     
 	public String convert() {

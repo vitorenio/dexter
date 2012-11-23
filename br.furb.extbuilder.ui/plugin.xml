@@ -87,4 +87,30 @@
          
       </menuContribution>
    </extension>
+     <extension
+           point="org.eclipse.ui.views">
+        <view
+              class="br.furb.extbuilder.ui.palette.PaletteView"
+              id="br.furb.extbuilder.ui.palette.PaletteView"
+              name="New ViewPart">
+        </view>
+     </extension>
+     
+   <extension point="org.eclipse.ui.views"> 
+      <category 
+         id="br.furb.extbuilder.views" 
+         name="ExtBuilder"/> 
+      <view 
+         id="br.furb.extbuilder.PaletteView" 
+         name="Palette View" 
+         category="br.furb.extbuilder.views" 
+         class="br.furb.extbuilder.ui.palette.PaletteView" 
+         icon="icons/XYZ.gif"/>
+   </extension> 
+     
+   <extension point="org.eclipse.ui.views"> 
+      <stickyView
+         id="br.furb.extbuilder.PaletteView" />
+   </extension> 
+     
 </plugin>
