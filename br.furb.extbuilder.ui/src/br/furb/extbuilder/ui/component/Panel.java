@@ -5,20 +5,17 @@ import java.util.List;
 
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
-import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
+import br.furb.extbuilder.core.ext.ExtPanel;
 
-public class Panel extends Component implements IPropertySource{
+
+public class Panel extends ExtPanel implements IPropertySource{
 
     private List<Panel> children;
     private Panel parent;
     
-    private String height = "";
-    private String width = "";
-    
     private IPropertyDescriptor[] properties = {
-    		new TextPropertyDescriptor( "id", "Id"),
     		new TextPropertyDescriptor("name", "Name"),
     		new TextPropertyDescriptor("height", "Height"),
     		new TextPropertyDescriptor("width", "Width"),
@@ -41,12 +38,9 @@ public class Panel extends Component implements IPropertySource{
         return parent;
     }
 
-    
     public void setParent(Panel parent) {
         this.parent = parent;
     }
-    
-
 
     @Override
     public Object getEditableValue() {
@@ -58,14 +52,12 @@ public class Panel extends Component implements IPropertySource{
     }
     @Override
     public Object getPropertyValue(Object id) {
-        if ("id".equals(id)){
-            return getId();
-        }else if("name".equals(id)){
+    	if("name".equals(id)){
         	return getName();
         }else if("height".equals(id)){
-        	return height;
+        	return getHeight();
         }else if("width".equals(id)){
-        	return width;
+        	return getWidth();
         }
         return "-vazio-";
     }
@@ -76,21 +68,18 @@ public class Panel extends Component implements IPropertySource{
     @Override
     public void resetPropertyValue(Object id) {
         setName("");      
-        setId("");
-        this.height = "";
-        this.width = "";
+        setHeight("");
+        this.setWidth("");
         
     }
     @Override
     public void setPropertyValue(Object id, Object value) {
-    	if ("id".equals(id)){
-    		 setId((String) value);
-        }else if("name".equals(id)){
+    	if("name".equals(id)){
         	 setName((String) value);
         }else if("height".equals(id)){
-        	this.height = (String) value;
+        	setHeight((String) value);
         }else if("width".equals(id)){
-        	this.width = (String) value;
+        	setWidth((String) value);
         }
 
     }
