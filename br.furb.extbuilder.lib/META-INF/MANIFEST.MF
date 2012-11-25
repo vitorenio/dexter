@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Lib
+Bundle-SymbolicName: br.furb.extbuilder.lib
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ClassPath: .,
+ lib/commons-io-2.4.jar
+Export-Package: org.apache.commons.io,
+ org.apache.commons.io.comparator,
+ org.apache.commons.io.filefilter,
+ org.apache.commons.io.input,
+ org.apache.commons.io.monitor,
+ org.apache.commons.io.output

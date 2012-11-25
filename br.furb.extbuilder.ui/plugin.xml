@@ -116,6 +116,21 @@
             id="br.furb.extbuilder.ui.editor.testview"
             name="New ViewPart">
       </view>
-   </extension> 
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchShortcuts">
+      <shortcut
+            class="br.furb.extbuilder.ui.LaunchShortcut1"
+            id="br.furb.extbuilder.ui.shortcut"
+            label="ext"
+            modes="run, debug">
+         <contextualLaunch>
+            <enablement>
+               <count
+                     value="1">
+               </count>
+            </enablement></contextualLaunch>
+      </shortcut>
+   </extension>
      
 </plugin>
