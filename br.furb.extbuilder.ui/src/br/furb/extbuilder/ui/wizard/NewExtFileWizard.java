@@ -27,6 +27,9 @@ import org.eclipse.ui.ide.IDE;
  */
 
 public class NewExtFileWizard extends Wizard implements INewWizard {
+	
+	public final static String ID = "br.furb.extbuilder.ui.wizard.NewExtFileWizard";
+	
 	private NewExtFileWizardPage page;
 	private ISelection selection;
 
