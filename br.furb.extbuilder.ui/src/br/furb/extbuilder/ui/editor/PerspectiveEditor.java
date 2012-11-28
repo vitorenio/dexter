@@ -12,10 +12,17 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DragSource;
+import org.eclipse.swt.dnd.DragSourceEvent;
+import org.eclipse.swt.dnd.DragSourceListener;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
@@ -36,14 +43,20 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.internal.dialogs.IPropertyPageContributor;
+import org.eclipse.ui.internal.views.properties.tabbed.TabbedPropertyViewPlugin;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.eclipse.ui.views.properties.IPropertySheetPage;
+import org.eclipse.ui.views.properties.IPropertySource;
 
+import br.furb.extbuilder.ui.component.Component;
 import br.furb.extbuilder.ui.outline.ExtOutlinePage;
 
 /**
@@ -73,6 +86,7 @@ public class PerspectiveEditor extends MultiPageEditorPart implements IResourceC
 		super();
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
 		
+		
 		//getEditorInput();
 		//getEditorInput().
 	}
@@ -97,56 +111,112 @@ public class PerspectiveEditor extends MultiPageEditorPart implements IResourceC
 		int index = addPage(container);
 
 		setPageText(index, "Preview");
-//		createPaletteControls();
+		createPaletteControls(container);
 		/*
 		createActions();
 		initializeToolBar();
 		initializeMenu();
 		*/
 	}
-	/*private void createPaletteControls() {
+	private void createPaletteControls(Composite container) {
 		// 		Composite container = new Composite(parent, SWT.NONE);
 		
-		Composite composite_1 = new Composite(getContainer(), SWT.NONE);
-		composite_1.setBounds(0, 0, 200, 468);
-		
+		//Composite container = new Composite(parent, SWT.NONE);
+
+		Composite composite_1 = new Composite(container, SWT.RIGHT);
+		composite_1.setBounds(0, 0, 300, 468);
+
 		ExpandBar expandBar = new ExpandBar(composite_1, SWT.NONE);
 		expandBar.setSize(158, 224);
 		expandBar.setSpacing(0);
-		
+
 		ExpandItem xpndtmNewExpanditem = new ExpandItem(expandBar, SWT.NONE);
 		xpndtmNewExpanditem.setExpanded(true);
 		xpndtmNewExpanditem.setText("Controls");
-		
+
 		Composite composite = new Composite(expandBar, SWT.NONE);
 		xpndtmNewExpanditem.setControl(composite);
 		xpndtmNewExpanditem.setHeight(200);
 		composite.setLayout(null);
-		
-		Button btnButton = new Button(composite, SWT.NONE);
-		btnButton.setBounds(5, 5, 65, 25);
-		btnButton.setText("Button");
-		
-		Button btnLabel = new Button(composite, SWT.NONE);
-		btnLabel.setBounds(5, 34, 65, 25);
-		btnLabel.setText("Label");
-		
-		Button btnNewButton = new Button(composite, SWT.NONE);
-		btnNewButton.setBounds(5, 65, 65, 25);
-		btnNewButton.setText("Text Area");
-		
-		Button btnForm = new Button(composite, SWT.NONE);
-		btnForm.setBounds(76, 65, 65, 25);
-		btnForm.setText("Form");
-		
-		Button btnCheckbox = new Button(composite, SWT.NONE);
-		btnCheckbox.setBounds(76, 34, 65, 25);
-		btnCheckbox.setText("Checkbox");
-		
+
+		createNewButton(composite);
+		createNewLabel(composite);
+		createNewText(composite);
+		createNewForm(composite);
+		createNewCheckBox(composite);
+		createNewRadio(composite);
+		createNewPanel(composite);
+
+	}
+	private void createNewPanel(Composite composite) {
+		Button btnPanel = new Button(composite, SWT.NONE);
+		btnPanel.setBounds(5, 96, 65, 25);
+		btnPanel.setText("Panel");
+		/* drag */
+		// Allow data to be copied or moved from the drag source
+		int operations = DND.DROP_MOVE | DND.DROP_COPY;
+		DragSource source = new DragSource(btnPanel, operations);
+
+		// Provide data in Text format
+		Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
+		source.setTransfer(types);
+
+		source.addDragListener(new EditorDragSourceListener(new br.furb.extbuilder.ui.component.Panel()));
+	}
+	private void createNewRadio(Composite composite) {
 		Button btnRadio = new Button(composite, SWT.NONE);
 		btnRadio.setBounds(76, 5, 65, 25);
 		btnRadio.setText("Radio");
-	}*/
+		btnRadio.setEnabled(false);
+	}
+	private void createNewCheckBox(Composite composite) {
+		Button btnCheckbox = new Button(composite, SWT.NONE);
+		btnCheckbox.setBounds(76, 34, 65, 25);
+		btnCheckbox.setText("Checkbox");
+		btnCheckbox.setEnabled(false);
+	}
+	private void createNewForm(Composite composite) {
+		Button btnForm = new Button(composite, SWT.NONE);
+		btnForm.setBounds(76, 65, 65, 25);
+		btnForm.setText("Form");
+		btnForm.setEnabled(false);
+	}
+	private void createNewText(Composite composite) {
+		Button btnTextArea = new Button(composite, SWT.NONE);
+		btnTextArea.setBounds(5, 65, 65, 25);
+		btnTextArea.setText("Text");
+		/* drag */
+		// Allow data to be copied or moved from the drag source
+		int operations = DND.DROP_MOVE | DND.DROP_COPY;
+		DragSource source = new DragSource(btnTextArea, operations);
+
+		// Provide data in Text format
+		Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
+		source.setTransfer(types);
+
+		source.addDragListener(new EditorDragSourceListener(new br.furb.extbuilder.ui.component.Text()));
+	}
+	private void createNewLabel(Composite composite) {
+		Button btnLabel = new Button(composite, SWT.NONE);
+		btnLabel.setBounds(5, 34, 65, 25);
+		btnLabel.setText("Label");
+		btnLabel.setEnabled(false);
+	}
+	private void createNewButton(Composite composite) {
+		final Button btnButton = new Button(composite, SWT.NONE);
+		btnButton.setBounds(5, 5, 65, 25);
+		btnButton.setText("Button");
+		/* drag */
+		// Allow data to be copied or moved from the drag source
+		int operations = DND.DROP_MOVE | DND.DROP_COPY;
+		DragSource source = new DragSource(btnButton, operations);
+
+		// Provide data in Text format
+		Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
+		source.setTransfer(types);
+
+		source.addDragListener(new EditorDragSourceListener(new br.furb.extbuilder.ui.component.Button()));
+	}
 	/**
 	 * Creates page 1 of the multi-page editor,
 	 * which allows you to change the font used in page 2.
@@ -316,5 +386,30 @@ public class PerspectiveEditor extends MultiPageEditorPart implements IResourceC
 	        return new ExtOutlinePage(); 
 	    }
 	    return super.getAdapter(adapter);
+	}
+	
+	private class EditorDragSourceListener implements DragSourceListener{
+		
+		private Component component;
+		
+		public <T extends Component> EditorDragSourceListener(T component){
+			this.component = component;
+		}
+		
+		public void dragStart(DragSourceEvent event) {
+			event.doit = true;
+		}
+
+		public void dragSetData(DragSourceEvent event) {
+			// Provide the data of the requested type.
+			if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
+				event.data = component.getClass().getSimpleName();
+			}
+		}
+
+		public void dragFinished(DragSourceEvent event) {
+			// nothing to do here
+		}
+		
 	}
 }

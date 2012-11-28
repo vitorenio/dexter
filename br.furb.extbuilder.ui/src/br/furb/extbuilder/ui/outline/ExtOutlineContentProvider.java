@@ -5,14 +5,20 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
+import br.furb.extbuilder.core.Conversible;
+import br.furb.extbuilder.ui.component.Component;
 import br.furb.extbuilder.ui.component.Panel;
 
+import com.google.gson.Gson;
 
-public class ExtOutlineContentProvider implements ITreeContentProvider {
+public class ExtOutlineContentProvider implements ITreeContentProvider, IPropertyChangeListener {
 
+	
     @Override
     public void dispose() {
         // TODO Auto-generated method stub
@@ -21,8 +27,7 @@ public class ExtOutlineContentProvider implements ITreeContentProvider {
 
     @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-        // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -41,8 +46,8 @@ public class ExtOutlineContentProvider implements ITreeContentProvider {
 
     @Override
     public Object getParent(Object element) {
-        if (element instanceof Panel){
-            return ((Panel) element).getParent();
+        if (element instanceof Component){
+            return ((Component) element).getParent();
         }
         return null;
     }
@@ -52,23 +57,12 @@ public class ExtOutlineContentProvider implements ITreeContentProvider {
         Object[] children = getChildren(element);
         return children != null && children.length > 0;
     }
-    
-    public static void main(String[] args) {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader("c:/temp/to_parse.txt"));
-            String line;
-            while((line = reader.readLine()) != null){
-                String prop = line.split(" ")[0];
-                System.out.println(prop + "(\"" + line.replaceFirst(prop + " ", "") + "\", false),");
-            }
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
+
+	@Override
+	public void propertyChange(PropertyChangeEvent event) {
+		System.out.println("uebaa!!");
+		
+	}
 
 
     

@@ -4,6 +4,7 @@ import org.eclipse.jface.action.*;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
@@ -79,6 +80,7 @@ public class PerspectiveEditorContributor extends MultiPageEditorActionBarContri
 				IDEActionFactory.BOOKMARK.getId(),
 				getAction(editor, IDEActionFactory.BOOKMARK.getId()));
 			actionBars.updateActionBars();
+
 		}
 	}
 	private void createActions() {

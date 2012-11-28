@@ -127,9 +127,6 @@ public class NewExtFileWizard extends Wizard implements INewWizard {
 				file.create(stream, true, monitor);
 			}
 			
-			
-			
-			
 			stream.close();
 		} catch (IOException e) {
 			System.out.println("Problemas ao abrir conteudo");

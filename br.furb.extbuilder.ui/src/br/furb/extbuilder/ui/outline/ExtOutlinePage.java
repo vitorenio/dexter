@@ -1,67 +1,55 @@
 package br.furb.extbuilder.ui.outline;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.util.List;
 
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.jface.action.AbstractAction;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.ContributionItem;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.jface.action.IContributionManager;
-import org.eclipse.jface.action.IMenuCreator;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
-import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.HelpListener;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.actions.NewWizardDropDownAction;
+import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
-import org.eclipse.ui.views.properties.IPropertyDescriptor;
-import org.eclipse.ui.views.properties.IPropertySheetPage;
-import org.eclipse.ui.views.properties.IPropertySource;
-import org.eclipse.ui.views.properties.IPropertySourceProvider;
-import org.eclipse.ui.views.properties.PropertySheetPage;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
+
+import br.furb.extbuilder.core.Conversible;
+import br.furb.extbuilder.ui.component.Button;
 import br.furb.extbuilder.ui.component.Component;
 import br.furb.extbuilder.ui.component.Panel;
+import br.furb.extbuilder.ui.component.Text;
 
 public class ExtOutlinePage extends ContentOutlinePage {
+
+	private Panel root;
 
 	@Override
 	public void createControl(Composite parent) {
 		super.createControl(parent);
 
+		
 		final TreeViewer tree = getTreeViewer();
 		tree.addSelectionChangedListener(this);
 		tree.setContentProvider(new ExtOutlineContentProvider());
 		tree.setLabelProvider(new ExtOutlineLabelProvider());
-
+		
+		
+		
 		// Configure the context menu.
 		MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 
@@ -71,17 +59,21 @@ public class ExtOutlinePage extends ContentOutlinePage {
 
 			@Override
 			public void runWithEvent(Event event) {
-				TreeSelection ts = (TreeSelection) getSelection();
-				List<Component> list = ts.toList();
-				for (Component cmp : list) {
-					System.out.println("it_" + cmp.getName());
-				}
-				System.out.println("done!");
+				   GsonBuilder builder = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping();
+				   builder.registerTypeAdapter(Component.class, new ComponentAdapter().nullSafe());
+
+				   Gson gson = builder.create();
+				   
+		        if (root instanceof Component){
+		        	System.out.println(gson.toJson(root));
+		        }
+		        
+		        
 			}
 
 			@Override
 			public String getText() {
-				return "Cobaia 1";
+				return "Refresh";
 			}
 
 		});
@@ -92,7 +84,7 @@ public class ExtOutlinePage extends ContentOutlinePage {
 		getSite().registerContextMenu(
 				"org.eclipse.ui.examples.readmetool.outline", menuMgr, tree); //$NON-NLS-1$
 
-		Panel root = new Panel();
+		root = new Panel();
 		root.setName("root");
 
 		Panel child1 = new Panel();
@@ -105,7 +97,15 @@ public class ExtOutlinePage extends ContentOutlinePage {
 		child1.addChild(child2);
 
 		tree.setInput(root);
-
+		
+		getSite().getPage().getActivePart().addPropertyListener(new IPropertyListener() {
+			
+			@Override
+			public void propertyChanged(Object source, int propId) {
+				System.out.println("");
+				
+			}
+		});
 		getSite().setSelectionProvider(tree);
 
 		// DND
@@ -175,8 +175,32 @@ public class ExtOutlinePage extends ContentOutlinePage {
 				if (textTransfer.isSupportedType(event.currentDataType)) {
 					String text = (String) event.data;
 
-					TreeItem item = new TreeItem((TreeItem)event.item, SWT.NONE);
-					item.setText(text);
+					Component newCmp;
+					if ("Button".equals(text)){
+						newCmp = new Button();
+					}else if ("Text".equals(text)){
+						newCmp = new Text();
+					}else if ("Panel".equals(text)){
+						newCmp = new Panel();
+					}else{
+						return;
+					}
+					
+					newCmp.setName("new_comp");
+					
+					TreeItem parentItem = (TreeItem) event.item;
+					
+					//se nao soltou o controle sobre nenhum componente, adiciona no painel principal
+					if (parentItem == null){
+						root.addChild(newCmp);
+					}else{
+						Component parentObj = (Component)parentItem.getData();
+						
+						parentObj.addChild(newCmp);
+					}
+					tree.refresh();
+					
+					
 				}
 				/*
 				 * if (fileTransfer.isSupportedType(event.currentDataType)) {
@@ -188,5 +212,25 @@ public class ExtOutlinePage extends ContentOutlinePage {
 		});
 
 	}
+	
+	private class ComponentAdapter extends TypeAdapter<Component> {
+	     public Component read(JsonReader reader) throws IOException {
+	         if (reader.peek() == JsonToken.NULL) {
+	           reader.nextNull();
+	           return null;
+	         }
+	         return null;
+	       }
+	       public void write(JsonWriter writer, Component value) throws IOException {
+	         if (value == null) {
+	           writer.nullValue();
+	           return;
+	         }
+	         if (value instanceof Panel){
+	        	 writer.value(value.getName());
+	         }
+	         
+	       }
+	     }
 
 }

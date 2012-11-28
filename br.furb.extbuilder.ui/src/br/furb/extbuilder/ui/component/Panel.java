@@ -10,45 +10,51 @@ import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import br.furb.extbuilder.core.ext.ExtPanel;
 
 
-public class Panel extends ExtPanel implements IPropertySource{
+public class Panel extends Component{
 
-    private List<Panel> children;
-    private Panel parent;
-    
-    private IPropertyDescriptor[] properties = {
-    		new TextPropertyDescriptor("name", "Name"),
-    		new TextPropertyDescriptor("height", "Height"),
-    		new TextPropertyDescriptor("width", "Width"),
-    };
-    
-    public Panel(){
-        children = new ArrayList<Panel>();
-    }
-    public List<Panel> getChildren() {
-        return children;
-    }
-    
-    public void addChild(Panel child) {
-        child.setParent(this);
-        children.add(child);
-    }
+    private String height = "";
+    private String width = "";
+    private String title = "";
+	private String renderTo;
 
-    
-    public Panel getParent() {
-        return parent;
-    }
+	public String getHeight() {
+		return height;
+	}
+	public void setHeight(String height) {
+		this.height = height;
+	}
+	public String getWidth() {
+		return width;
+	}
+	public void setWidth(String width) {
+		this.width = width;
+	}
 
-    public void setParent(Panel parent) {
-        this.parent = parent;
-    }
 
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getRenderTo() {
+		return renderTo;
+	}
+	public void setRenderTo(String renderTo) {
+		this.renderTo = renderTo;
+	}
+	
     @Override
     public Object getEditableValue() {
         return this;
     }
     @Override
     public IPropertyDescriptor[] getPropertyDescriptors() {        
-        return properties;
+        return new IPropertyDescriptor[]{
+        		new TextPropertyDescriptor("name", "Name"),
+        		new TextPropertyDescriptor("height", "Height"),
+        		new TextPropertyDescriptor("width", "Width"),
+        };
     }
     @Override
     public Object getPropertyValue(Object id) {
@@ -58,13 +64,14 @@ public class Panel extends ExtPanel implements IPropertySource{
         	return getHeight();
         }else if("width".equals(id)){
         	return getWidth();
+        }else if ("title".equals(id)){
+        	return getTitle();
+        }else if ("renderTo".equals(id)){
+        	return getRenderTo();
         }
         return "-vazio-";
     }
-    @Override
-    public boolean isPropertySet(Object id) {
-        return true;
-    }
+
     @Override
     public void resetPropertyValue(Object id) {
         setName("");      
@@ -80,8 +87,12 @@ public class Panel extends ExtPanel implements IPropertySource{
         	setHeight((String) value);
         }else if("width".equals(id)){
         	setWidth((String) value);
+        }else if ("title".equals(id)){
+        	setTitle((String) value);
+        }else if ("renderTo".equals(id)){
+        	setRenderTo((String) value);
         }
 
     }
-
+	
 }
