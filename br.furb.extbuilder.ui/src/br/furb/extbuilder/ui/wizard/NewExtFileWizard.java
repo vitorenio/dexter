@@ -1,5 +1,6 @@
 package br.furb.extbuilder.ui.wizard;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
@@ -7,13 +8,18 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jface.operation.*;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URISyntaxException;
+import java.net.URL;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import java.io.*;
+
 import org.eclipse.ui.*;
 import org.eclipse.ui.ide.IDE;
+import org.osgi.framework.Bundle;
 
 /**
  * This is a sample new wizard. Its role is to create a new file 
@@ -101,15 +107,35 @@ public class NewExtFileWizard extends Wizard implements INewWizard {
 		}
 		IContainer container = (IContainer) resource;
 		final IFile file = container.getFile(new Path(fileName));
+		
+		
 		try {
+			Bundle bundle = Platform.getBundle("br.furb.extbuilder.ui");
+			URL fileURL = bundle.getEntry("preview.js");
+			File previewBaseFile = new File(FileLocator.resolve(fileURL).toURI());
+			
+			//IPath path = new Path(previewBaseFile.getAbsolutePath());
+			File previewBaseFileDest = new File(container.getLocation().append(new Path(fileName).removeFileExtension().addFileExtension("js")).toOSString());
+			
+			FileUtils.copyFile(previewBaseFile, previewBaseFileDest);
+			
+			
 			InputStream stream = openContentStream();
 			if (file.exists()) {
 				file.setContents(stream, true, true, monitor);
 			} else {
 				file.create(stream, true, monitor);
 			}
+			
+			
+			
+			
 			stream.close();
 		} catch (IOException e) {
+			System.out.println("Problemas ao abrir conteudo");
+		}catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		monitor.worked(1);
 		monitor.setTaskName("Opening file for editing...");
@@ -124,8 +150,10 @@ public class NewExtFileWizard extends Wizard implements INewWizard {
 			}
 		});
 		monitor.worked(1);
+		
 	}
 	
+
 	/**
 	 * We will initialize file contents with a sample text.
 	 */

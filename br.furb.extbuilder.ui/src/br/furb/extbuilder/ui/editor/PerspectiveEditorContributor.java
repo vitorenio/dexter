@@ -26,6 +26,7 @@ public class PerspectiveEditorContributor extends MultiPageEditorActionBarContri
 	 */
 	public PerspectiveEditorContributor() {
 		super();
+		
 		createActions();
 	}
 	/**

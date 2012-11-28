@@ -72,86 +72,42 @@ public class PerspectiveEditor extends MultiPageEditorPart implements IResourceC
 	public PerspectiveEditor() {
 		super();
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
+		
+		//getEditorInput();
+		//getEditorInput().
 	}
 	/**
 	 * Creates page 0 of the multi-page editor,
 	 * which contains a text editor.
 	 */
 	void createPage0() {
-		Composite container = new Composite(getContainer().getParent(), SWT.NONE);
+		Composite container = new Composite(getContainer(), SWT.NONE);
+		container.setLayout(new FillLayout());
 		
-		Button btnButton = new Button(container, SWT.NONE);
-		btnButton.setBounds(416, 10, 75, 25);
-		btnButton.setText("Button");
 		
-		Button btnLabel = new Button(container, SWT.NONE);
-		btnLabel.setText("Label");
-		btnLabel.setBounds(416, 41, 75, 25);
+		Browser browser = new Browser(container, SWT.NONE);
+		if(!browser.setUrl("http://www.google.com/")){
+			System.out.println("nao conectou....");
+		}
+		//browser.setText("<html><body><b>Funfou</b></body></html>");
+		browser.refresh();
+		browser.setLayout(new FillLayout());
 		
-		Button btnForm = new Button(container, SWT.NONE);
-		btnForm.setText("Form");
-		btnForm.setBounds(416, 72, 75, 25);
-		
-		Button btnEditbox = new Button(container, SWT.NONE);
-		btnEditbox.setText("EditBox");
-		btnEditbox.setBounds(416, 103, 75, 25);
-		
-		Button btnCombo = new Button(container, SWT.NONE);
-		btnCombo.setText("Combo");
-		btnCombo.setBounds(416, 134, 75, 25);
-		
-		Button button = new Button(container, SWT.NONE);
-		button.setText("Combo");
-		button.setBounds(497, 134, 75, 25);
-		
-		Button button_1 = new Button(container, SWT.NONE);
-		button_1.setText("Button");
-		button_1.setBounds(497, 10, 75, 25);
-		
-		Button button_2 = new Button(container, SWT.NONE);
-		button_2.setText("Label");
-		button_2.setBounds(497, 41, 75, 25);
-		
-		Button button_3 = new Button(container, SWT.NONE);
-		button_3.setText("Form");
-		button_3.setBounds(497, 72, 75, 25);
-		
-		Button button_4 = new Button(container, SWT.NONE);
-		button_4.setText("EditBox");
-		button_4.setBounds(497, 103, 75, 25);
-		
-		TabFolder tabFolder = new TabFolder(container, SWT.NONE);
-		tabFolder.setBounds(10, 10, 400, 448);
-		
-		TabItem tbtmDesign = new TabItem(tabFolder, SWT.NONE);
-		tbtmDesign.setText("Design");
-		
-		Browser browser = new Browser(tabFolder, SWT.NONE);
-		browser.setUrl("www.ddd.com");
-		browser.setText("browser");
-		tbtmDesign.setControl(browser);
-		
-		TabItem tbtmSource = new TabItem(tabFolder, SWT.NONE);
-		tbtmSource.setText("Source");
-		
-		/*txtAsd = new Text(tabFolder, SWT.BORDER);
-		txtAsd.setText("<fonte javascript>");
-		tbtmSource.setControl(txtAsd);
-		*/
-		Button btnBotaoTemporarioQue = new Button(container, SWT.NONE);
-		btnBotaoTemporarioQue.setBounds(416, 205, 156, 94);
-		btnBotaoTemporarioQue.setText("Aqui acontece a magica");
+	
+		int index = addPage(container);
 
+		setPageText(index, "Preview");
+//		createPaletteControls();
 		/*
 		createActions();
 		initializeToolBar();
 		initializeMenu();
 		*/
 	}
-	private void createPaletteControls() {
+	/*private void createPaletteControls() {
 		// 		Composite container = new Composite(parent, SWT.NONE);
 		
-		Composite composite_1 = new Composite(getContainer().getParent(), SWT.NONE);
+		Composite composite_1 = new Composite(getContainer(), SWT.NONE);
 		composite_1.setBounds(0, 0, 200, 468);
 		
 		ExpandBar expandBar = new ExpandBar(composite_1, SWT.NONE);
@@ -190,7 +146,7 @@ public class PerspectiveEditor extends MultiPageEditorPart implements IResourceC
 		Button btnRadio = new Button(composite, SWT.NONE);
 		btnRadio.setBounds(76, 5, 65, 25);
 		btnRadio.setText("Radio");
-	}
+	}*/
 	/**
 	 * Creates page 1 of the multi-page editor,
 	 * which allows you to change the font used in page 2.
@@ -200,22 +156,22 @@ public class PerspectiveEditor extends MultiPageEditorPart implements IResourceC
 		Composite composite = new Composite(getContainer(), SWT.NONE);
 		GridLayout layout = new GridLayout();
 		composite.setLayout(layout);
-		layout.numColumns = 2;
-
-		Button fontButton = new Button(composite, SWT.NONE);
-		GridData gd = new GridData(GridData.BEGINNING);
-		gd.horizontalSpan = 2;
-		fontButton.setLayoutData(gd);
-		fontButton.setText("Change Font...");
 		
-		fontButton.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				setFont();
-			}
-		});
+		
 
+		Button btnBotaoTemporarioQue = new Button(composite, SWT.NONE);
+		btnBotaoTemporarioQue.setBounds(416, 205, 156, 94);
+		btnBotaoTemporarioQue.setText("Aqui acontece a magica");
+		
+		//editor = new TextEditor();
+		
 		int index = addPage(composite);
-		setPageText(index, "Properties");
+		
+
+
+		setPageText(index, "Source");
+		
+		
 	}
 	/**
 	 * Creates page 2 of the multi-page editor,
@@ -236,7 +192,7 @@ public class PerspectiveEditor extends MultiPageEditorPart implements IResourceC
 	 */
 	protected void createPages() {
 		createPage0();
-		//createPage1();
+		createPage1();
 		//createPage2();
 
 	}
@@ -270,7 +226,7 @@ public class PerspectiveEditor extends MultiPageEditorPart implements IResourceC
 	 * Method declared on IEditorPart
 	 */
 	public void gotoMarker(IMarker marker) {
-		setActivePage(0);
+		//setActivePage(0);
 		IDE.gotoMarker(getEditor(0), marker);
 	}
 	/**

@@ -9,32 +9,12 @@
             extensions="perspective"
             icon="icons/sample.gif"
             contributorClass="br.furb.extbuilder.ui.editor.PerspectiveEditorContributor"
-            class="br.furb.extbuilder.ui.prototipo.PrototypeEditorWithPalette"
+            class="br.furb.extbuilder.ui.editor.PerspectiveEditor"
             id="br.furb.extbuilder.ui.editor.testview">
       </editor> 
    </extension>
    
-   
-   <!---->
-   <extension
-      point = "org.eclipse.ui.newWizards">
-	<category
-	   id = "org.eclipse.ui.examples.readmetool.new"
-	   parentCategory="org.eclipse.ui.Examples"
-	   name="%NewWizard.category">
-	</category>
- 	<wizard
-	   id = "org.eclipse.ui.examples.readmetool.wizards.new.file"
-      	   name = "%NewWizard.name"
-	   class="br.furb.extbuilder.ui.wizard.NewExtFileWizard"
-	   category="org.eclipse.ui.Examples/org.eclipse.ui.examples.readmetool.new">
-    	   <description>%NewWizard.desc</description>
-	   <selection class="org.eclipse.core.resources.IResource"/>
-	</wizard>
-</extension>
-   
-   <!---->
-   
+  
    <extension
          point="org.eclipse.ui.newWizards">
       <category
