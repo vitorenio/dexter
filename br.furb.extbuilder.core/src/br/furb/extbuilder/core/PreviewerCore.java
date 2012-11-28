@@ -4,10 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.rmi.server.UID;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -23,7 +21,6 @@ import org.osgi.framework.Bundle;
 public class PreviewerCore {
 
 	private static File previewDestDir = new File(ResourcesPlugin.getPlugin().getStateLocation().append("tmp/extPreview").toOSString());
-	//private static File indexPreviewFile;
 	
 	private static Map<String, File> cachedPreviews = new HashMap<String, File>();
 	
@@ -56,14 +53,6 @@ public class PreviewerCore {
 		
 		return new File(previewDestDir, FilenameUtils.removeExtension(new Path(prjName).append(fileRelativePath).toOSString()));
 	}
-
-/*	public File getIndexPreviewFile() {
-		return indexPreviewFile;
-	}
-
-	public void setIndexPreviewFile(File indexPreviewFile) {
-		this.indexPreviewFile = indexPreviewFile;
-	}*/
 
 	public static File getHtmlForPreview(ISelection selection) {
 		String previewsDestDir = getPreviewDestDir(selection).getAbsolutePath();

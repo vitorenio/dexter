@@ -1,19 +1,11 @@
 package br.furb.extbuilder.ui.editor;
 
 
-import java.io.StringWriter;
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.StringTokenizer;
-
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.StyledText;
@@ -23,12 +15,9 @@ import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -36,25 +25,17 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.widgets.FontDialog;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.ide.IDE;
-import org.eclipse.ui.internal.dialogs.IPropertyPageContributor;
-import org.eclipse.ui.internal.views.properties.tabbed.TabbedPropertyViewPlugin;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.eclipse.ui.views.properties.IPropertySheetPage;
-import org.eclipse.ui.views.properties.IPropertySource;
 
 import br.furb.extbuilder.ui.component.Component;
 import br.furb.extbuilder.ui.outline.ExtOutlinePage;
@@ -85,10 +66,6 @@ public class PerspectiveEditor extends MultiPageEditorPart implements IResourceC
 	public PerspectiveEditor() {
 		super();
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
-		
-		
-		//getEditorInput();
-		//getEditorInput().
 	}
 	/**
 	 * Creates page 0 of the multi-page editor,
@@ -112,16 +89,9 @@ public class PerspectiveEditor extends MultiPageEditorPart implements IResourceC
 
 		setPageText(index, "Preview");
 		createPaletteControls(container);
-		/*
-		createActions();
-		initializeToolBar();
-		initializeMenu();
-		*/
+		
 	}
 	private void createPaletteControls(Composite container) {
-		// 		Composite container = new Composite(parent, SWT.NONE);
-		
-		//Composite container = new Composite(parent, SWT.NONE);
 
 		Composite composite_1 = new Composite(container, SWT.RIGHT);
 		composite_1.setBounds(0, 0, 300, 468);
@@ -226,45 +196,23 @@ public class PerspectiveEditor extends MultiPageEditorPart implements IResourceC
 		Composite composite = new Composite(getContainer(), SWT.NONE);
 		GridLayout layout = new GridLayout();
 		composite.setLayout(layout);
-		
-		
 
 		Button btnBotaoTemporarioQue = new Button(composite, SWT.NONE);
 		btnBotaoTemporarioQue.setBounds(416, 205, 156, 94);
 		btnBotaoTemporarioQue.setText("Aqui acontece a magica");
-		
-		//editor = new TextEditor();
-		
-		int index = addPage(composite);
-		
 
+		int index = addPage(composite);
 
 		setPageText(index, "Source");
 		
-		
 	}
-	/**
-	 * Creates page 2 of the multi-page editor,
-	 * which shows the sorted text.
-	 */
-	void createPage2() {
-		Composite composite = new Composite(getContainer(), SWT.NONE);
-		FillLayout layout = new FillLayout();
-		composite.setLayout(layout);
-		text = new StyledText(composite, SWT.H_SCROLL | SWT.V_SCROLL);
-		text.setEditable(false);
 
-		int index = addPage(composite);
-		setPageText(index, "Preview");
-	}
 	/**
 	 * Creates the pages of the multi-page editor.
 	 */
 	protected void createPages() {
 		createPage0();
 		createPage1();
-		//createPage2();
-
 	}
 	/**
 	 * The <code>MultiPageEditorPart</code> implementation of this 
@@ -320,10 +268,8 @@ public class PerspectiveEditor extends MultiPageEditorPart implements IResourceC
 	 */
 	protected void pageChange(int newPageIndex) {
 		super.pageChange(newPageIndex);
-		if (newPageIndex == 2) {
-			sortWords();
-		}
 	}
+	
 	/**
 	 * Closes all project files on project close.
 	 */
@@ -355,29 +301,6 @@ public class PerspectiveEditor extends MultiPageEditorPart implements IResourceC
 			font = new Font(text.getDisplay(), fontData);
 			text.setFont(font);
 		}
-	}
-	/**
-	 * Sorts the words in page 0, and shows them in page 2.
-	 */
-	void sortWords() {
-
-		String editorText =
-			editor.getDocumentProvider().getDocument(editor.getEditorInput()).get();
-
-		StringTokenizer tokenizer =
-			new StringTokenizer(editorText, " \t\n\r\f!@#\u0024%^&*()-_=+`~[]{};:'\",.<>/?|\\");
-		ArrayList editorWords = new ArrayList();
-		while (tokenizer.hasMoreTokens()) {
-			editorWords.add(tokenizer.nextToken());
-		}
-
-		Collections.sort(editorWords, Collator.getInstance());
-		StringWriter displayText = new StringWriter();
-		for (int i = 0; i < editorWords.size(); i++) {
-			displayText.write(((String) editorWords.get(i)));
-			displayText.write(System.getProperty("line.separator"));
-		}
-		text.setText(displayText.toString());
 	}
 	
 	@Override

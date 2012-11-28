@@ -1,12 +1,10 @@
 package br.furb.extbuilder.ui.outline;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
@@ -21,6 +19,11 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 
+import br.furb.extbuilder.ui.component.Button;
+import br.furb.extbuilder.ui.component.Component;
+import br.furb.extbuilder.ui.component.Panel;
+import br.furb.extbuilder.ui.component.Text;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
@@ -28,29 +31,29 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
-import br.furb.extbuilder.core.Conversible;
-import br.furb.extbuilder.ui.component.Button;
-import br.furb.extbuilder.ui.component.Component;
-import br.furb.extbuilder.ui.component.Panel;
-import br.furb.extbuilder.ui.component.Text;
-
+/**
+ * Classe responsável por exibir no outline do editor a arvore de componentes da tela. 
+ * 
+ * @author vitor
+ *
+ */
 public class ExtOutlinePage extends ContentOutlinePage {
 
+	/**
+	 * Representa o objeto raiz da interface. Presume-se que toda interface esteja construida dentro de um elemento root.
+	 */
 	private Panel root;
 
 	@Override
 	public void createControl(Composite parent) {
 		super.createControl(parent);
-
 		
 		final TreeViewer tree = getTreeViewer();
 		tree.addSelectionChangedListener(this);
 		tree.setContentProvider(new ExtOutlineContentProvider());
 		tree.setLabelProvider(new ExtOutlineLabelProvider());
 		
-		
-		
-		// Configure the context menu.
+		// Configura o menu de contexto
 		MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 
 		menuMgr.add(new Separator()); //$NON-NLS-1$
@@ -59,6 +62,8 @@ public class ExtOutlinePage extends ContentOutlinePage {
 
 			@Override
 			public void runWithEvent(Event event) {
+				/** TODO: mock tosco apenas para ter uma idéia de como seria a renderizaçao dos componentes. */
+				
 				   GsonBuilder builder = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping();
 				   builder.registerTypeAdapter(Component.class, new ComponentAdapter().nullSafe());
 
@@ -80,10 +85,12 @@ public class ExtOutlinePage extends ContentOutlinePage {
 		final Menu menu = menuMgr.createContextMenu(parent);
 
 		tree.getTree().setMenu(menu);
-		// Be sure to register it so that other plug-ins can add actions.
+		
+		// registra o menu
 		getSite().registerContextMenu(
 				"org.eclipse.ui.examples.readmetool.outline", menuMgr, tree); //$NON-NLS-1$
 
+		/**TODO: mock de workaround para o problema de integraçao dos properties com o outline*/
 		root = new Panel();
 		root.setName("root");
 
@@ -95,14 +102,15 @@ public class ExtOutlinePage extends ContentOutlinePage {
 		Panel child2 = new Panel();
 		child2.setName("child2");
 		child1.addChild(child2);
-
+		/***/
+			
 		tree.setInput(root);
 		
 		getSite().getPage().getActivePart().addPropertyListener(new IPropertyListener() {
 			
 			@Override
 			public void propertyChanged(Object source, int propId) {
-				System.out.println("");
+				//System.out.println("");
 				
 			}
 		});
@@ -121,6 +129,7 @@ public class ExtOutlinePage extends ContentOutlinePage {
 
 		target.addDropListener(new DropTargetListener() {
 
+			@Override
 			public void dragEnter(DropTargetEvent event) {
 				if (event.detail == DND.DROP_DEFAULT) {
 					if ((event.operations & DND.DROP_COPY) != 0) {
@@ -129,26 +138,15 @@ public class ExtOutlinePage extends ContentOutlinePage {
 						event.detail = DND.DROP_NONE;
 					}
 				}
-				// will accept text but prefer to have files dropped
-				/*
-				 * for (int i = 0; i < event.dataTypes.length; i++) { if
-				 * (fileTransfer.isSupportedType(event.dataTypes[i])) {
-				 * event.currentDataType = event.dataTypes[i]; // files should
-				 * only be copied if (event.detail != DND.DROP_COPY) {
-				 * event.detail = DND.DROP_NONE; } break; } }
-				 */
+				
 			}
 
+			@Override
 			public void dragOver(DropTargetEvent event) {
-				/*
-				 * event.feedback = DND.FEEDBACK_SELECT | DND.FEEDBACK_SCROLL;
-				 * if (textTransfer.isSupportedType(event.currentDataType)) { //
-				 * NOTE: on unsupported platforms this will return null Object o
-				 * = textTransfer.nativeToJava(event.currentDataType); String t
-				 * = (String) o; if (t != null) System.out.println(t); }
-				 */
+				/*nothing to do here*/
 			}
 
+			@Override
 			public void dragOperationChanged(DropTargetEvent event) {
 				if (event.detail == DND.DROP_DEFAULT) {
 					if ((event.operations & DND.DROP_COPY) != 0) {
@@ -157,20 +155,17 @@ public class ExtOutlinePage extends ContentOutlinePage {
 						event.detail = DND.DROP_NONE;
 					}
 				}
-				// allow text to be moved but files should only be copied
-				/*
-				 * if (fileTransfer.isSupportedType(event.currentDataType)) { if
-				 * (event.detail != DND.DROP_COPY) { event.detail =
-				 * DND.DROP_NONE; } }
-				 */
 			}
-
+			
+			@Override
 			public void dragLeave(DropTargetEvent event) {
 			}
 
+			@Override
 			public void dropAccept(DropTargetEvent event) {
 			}
 
+			@Override
 			public void drop(DropTargetEvent event) {
 				if (textTransfer.isSupportedType(event.currentDataType)) {
 					String text = (String) event.data;
@@ -202,12 +197,6 @@ public class ExtOutlinePage extends ContentOutlinePage {
 					
 					
 				}
-				/*
-				 * if (fileTransfer.isSupportedType(event.currentDataType)) {
-				 * String[] files = (String[]) event.data; for (int i = 0; i <
-				 * files.length; i++) { TableItem item = new
-				 * TableItem(dropTable, SWT.NONE); item.setText(files[i]); } }
-				 */
 			}
 		});
 

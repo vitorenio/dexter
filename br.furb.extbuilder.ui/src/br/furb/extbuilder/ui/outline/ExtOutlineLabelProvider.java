@@ -6,7 +6,11 @@ import br.furb.extbuilder.ui.component.Button;
 import br.furb.extbuilder.ui.component.Panel;
 import br.furb.extbuilder.ui.component.Text;
 
-
+/**
+ * Classe responsável por fornecer labels para o outline
+ * @author vitor
+ *
+ */
 public class ExtOutlineLabelProvider extends LabelProvider {
 
     @Override

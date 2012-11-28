@@ -4,7 +4,6 @@ import org.eclipse.jface.action.*;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
@@ -86,11 +85,11 @@ public class PerspectiveEditorContributor extends MultiPageEditorActionBarContri
 	private void createActions() {
 		sampleAction = new Action() {
 			public void run() {
-				MessageDialog.openInformation(null, "Gef_proto", "Sample Action Executed");
+				MessageDialog.openInformation(null, "Gef_proto", "açao qualquer!");
 			}
 		};
-		sampleAction.setText("Sample Action");
-		sampleAction.setToolTipText("Sample Action tool tip");
+		sampleAction.setText("Action");
+		sampleAction.setToolTipText("tool tip");
 		sampleAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
 				getImageDescriptor(IDE.SharedImages.IMG_OBJS_TASK_TSK));
 	}

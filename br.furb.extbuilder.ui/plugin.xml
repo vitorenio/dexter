@@ -18,11 +18,11 @@
    <extension
          point="org.eclipse.ui.newWizards">
       <category
-            name="ExtBuilder1"
+            name="ExtJS Plugin"
             id="br.furb.extbuilder.Wizard1">
       </category>
       <wizard
-            name="New Ext File"
+            name="New Ext Interface"
             icon="icons/sample.gif"
             category="br.furb.extbuilder.Wizard1"
             class="br.furb.extbuilder.ui.wizard.NewExtFileWizard"
@@ -84,11 +84,11 @@
                id="br.furb.AddCompItem1"
                label="Add Component"
                mnemonic="S">
-
          </command>
-         
       </menuContribution>
    </extension>
+   
+   <!--
      <extension
            point="org.eclipse.ui.views">
         <view
@@ -97,7 +97,9 @@
               name="New ViewPart">
         </view>
      </extension>
+     -->
      
+     <!--
    <extension point="org.eclipse.ui.views"> 
       <category 
          id="br.furb.extbuilder.views" 
@@ -109,7 +111,9 @@
          class="br.furb.extbuilder.ui.palette.PaletteView" 
          icon="icons/XYZ.gif"/>
    </extension> 
+     -->
      
+     <!--
    <extension point="org.eclipse.ui.views"> 
       <stickyView
          id="br.furb.extbuilder.PaletteView" />
@@ -119,6 +123,7 @@
             name="New ViewPart">
       </view>
    </extension>
+   -->
    <extension
          point="org.eclipse.debug.ui.launchShortcuts">
       <shortcut

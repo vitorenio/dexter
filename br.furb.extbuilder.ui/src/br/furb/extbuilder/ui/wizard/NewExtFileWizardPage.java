@@ -21,9 +21,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 
 /**
- * The "New" wizard page allows setting the container for the new file as well
- * as the file name. The page will only accept file name without the extension
- * OR with the extension that matches the expected one (mpe).
+ * Página de novo arquivo Ext do wizard de criaçao de arquivo
  */
 
 public class NewExtFileWizardPage extends WizardPage {
@@ -34,20 +32,17 @@ public class NewExtFileWizardPage extends WizardPage {
 	private ISelection selection;
 
 	/**
-	 * Constructor for SampleNewWizardPage.
+	 * Constructor .
 	 * 
 	 * @param pageName
 	 */
 	public NewExtFileWizardPage(ISelection selection) {
 		super("wizardPage");
 		setTitle("Multi-page Editor File");
-		setDescription("This wizard creates a new file with *.mpe extension that can be opened by a multi-page editor.");
+		setDescription("This wizard creates a new file with *.perspective extension that can be opened by a multi-page editor.");
 		this.selection = selection;
 	}
 
-	/**
-	 * @see IDialogPage#createControl(Composite)
-	 */
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout();
@@ -109,7 +104,7 @@ public class NewExtFileWizardPage extends WizardPage {
 				containerText.setText(container.getFullPath().toString());
 			}
 		}
-		fileText.setText("new_file.mpe");
+		fileText.setText("new_file.perspective");
 	}
 
 	/**
